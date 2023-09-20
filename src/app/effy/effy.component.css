@@ -1,0 +1,9 @@
+.effy-form {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+}
+
+.summary {
+margin-bottom: 20px;
+}

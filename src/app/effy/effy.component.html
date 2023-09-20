@@ -1,0 +1,90 @@
+<h1>Test d'éligibilité au programme d'aides et d'accompagnement <strong>Effy</strong></h1>
+<mat-stepper #stepper linear>
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup" class="effy-form">
+      <ng-template matStepLabel>Informations personelles</ng-template>
+      <div>
+        <label>Civilité: </label>
+        <mat-radio-group formControlName="genderFormControl" [(ngModel)]="userData.civility">
+          <mat-radio-button value="Mr">Mr</mat-radio-button>
+          <mat-radio-button value="Mme">Mme</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <mat-form-field>
+        <mat-label>Nom</mat-label>
+        <input matInput [(ngModel)]="userData.lastName" formControlName="lastNameFormControl" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Prénom</mat-label>
+        <input matInput [(ngModel)]="userData.firstName" formControlName="firstNameFormControl" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input type="email" [(ngModel)]="userData.email" matInput formControlName="emailFormControl"
+          placeholder="Ex. martin@example.com" required>
+        <mat-icon matSuffix>email</mat-icon>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Téléphone</mat-label>
+        <span matPrefix>+33 &nbsp;</span>
+        <input type="tel" [(ngModel)]="userData.phone" matInput placeholder="6 11 12 45 90"
+          formControlName="phoneFormControl" required>
+        <mat-icon matSuffix>phone</mat-icon>
+      </mat-form-field>
+      <div>
+        <button mat-raised-button matStepperNext>Suivant</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup">
+    <form [formGroup]="secondFormGroup" class="effy-form">
+      <ng-template matStepLabel>Informations du projet</ng-template>
+      <div>
+        <label>Êtes-vous propriétaire: </label>
+        <mat-radio-group formControlName="ownerFormControl" [(ngModel)]="projectData.owner">
+          <mat-radio-button value="true">Oui</mat-radio-button>
+          <mat-radio-button value="false">Non</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <mat-form-field>
+        <mat-label>Nombre de personnes dans le foyer</mat-label>
+        <input matInput [(ngModel)]="projectData.nbOfPersons" formControlName="nbOfPersonsFormControl" required
+          type="number" min="1">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Vos revenues</mat-label>
+        <input matInput [(ngModel)]="projectData.revenues" formControlName="revenuesFormControl" required type="number" min="0">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Surface de votre bien (en m²)</mat-label>
+        <input matInput [(ngModel)]="projectData.surface" formControlName="surfaceFormControl" required type="number" min="0">
+      </mat-form-field>
+      <div>
+        <button mat-raised-button matStepperPrevious>Précédent</button>
+        <button mat-raised-button matStepperNext (click)="updateCost()">Suivant</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Résultat</ng-template>
+    <div>
+      <p>Merci {{userData.civility}} {{userData.lastName}} {{userData.firstName}}</p>
+      <div *ngIf="projectData.owner == 'false'" class="summary">
+        N'étant pas propriétaire de votre bien vous n'êtes malheureusement pas éligible au programme d'aides et d'accompagnement <strong>Effy</strong>.
+      </div>
+      <div *ngIf="projectData.owner == 'true'" class="summary">        
+        <div *ngIf="effyHelp > 0">
+          <h2 style="color: #74f0a7;">Félicitations !</h2>
+          <p>Vous êtes éligible au programme d'aides et d'accompagnement <strong>Effy</strong> !</p>
+          Coût du projet : {{totalCost}}€ <br>
+          Montant de l'aide Effy : <strong>{{effyHelp}}€</strong>
+        </div>
+        <div *ngIf="effyHelp <= 0">
+          Désolé, vous n'êtes pas éligible au programme d'aides et d'accompagnement <strong>Effy</strong>.
+        </div>
+      </div>
+      <button mat-raised-button matStepperPrevious>Back</button>
+      <button mat-raised-button (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-stepper>
